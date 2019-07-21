@@ -22,18 +22,30 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
         public TipoDespesasController(GerenciaDespesaContext context, IMapper mapper)
         {
             //_context = context;
-            _tipoDespesaAppService = new TipoDespesaAppService(context);
+            _tipoDespesaAppService = new TipoDespesaAppService(context, mapper);
             _mapper = mapper;
         }
 
         // GET: TipoDespesas
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             //return View(await _context.TTipoDespesas.ToListAsync());
-            var tipoDespesaMapped = _mapper.Map<List<TipoDespesaViewModel>>(await _tipoDespesaAppService.ObterTodosTeste());
-            return View(tipoDespesaMapped);
+            //var tipoDespesaMapped = _mapper.Map<List<TipoDespesaViewModel>>();
+            return View(await _tipoDespesaAppService.ObterTodos());
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index(string txtProcurar)
+        {
+            if (!String.IsNullOrEmpty(txtProcurar))
+            {
+                return View(_tipoDespesaAppService.Buscar(x => x.Nome.ToUpper().Contains(txtProcurar.ToUpper())));
+            }
+
+            return View(await _tipoDespesaAppService.ObterTodos());
+
+        }
         // GET: TipoDespesas/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -69,7 +81,12 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
             if (ModelState.IsValid)
             {
                 //tipoDespesaViewModel.TipoDespesaId = Guid.NewGuid();
-                await _tipoDespesaAppService.Adicionar(tipoDespesaViewModel);
+                var retorno = await _tipoDespesaAppService.Adicionar(tipoDespesaViewModel);
+                
+                if (retorno != null)
+                {
+                    TempData["Confirmacao"] = retorno.Nome + " foi cadastrado(a) com sucesso!";
+                }
                 //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -107,9 +124,10 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
 
             if (ModelState.IsValid)
             {
+                TipoDespesaViewModel retorno;
                 try
                 {
-                    await _tipoDespesaAppService.Atualizar(tipoDespesaViewModel);
+                    retorno  = await _tipoDespesaAppService.Atualizar(tipoDespesaViewModel);
                     //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -123,6 +141,10 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
                     {
                         throw;
                     }
+                }
+                if (retorno != null)
+                {
+                    TempData["Confirmacao"] = retorno.Nome + " foi atualizado(a) com sucesso!";
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -150,12 +172,12 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
         // POST: TipoDespesas/Delete/5
         [HttpPost, ActionName("Delete")]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<JsonResult> Delete(Guid id)
         {
             //var tipoDespesa = await _tipoDespesaAppService.ObterPorId(id);
             await _tipoDespesaAppService.RemoverAsync(id);
             //await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json("Tipo despesa excluída com sucesso!");
         }
 
         private async Task<bool> TipoDespesaExists(Guid id)

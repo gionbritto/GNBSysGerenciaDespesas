@@ -14,15 +14,18 @@ namespace GNBSys.GerenciaDespesas.Application
     public class TipoDespesaAppService : ITipoDespesaAppService
     {
         private readonly TipoDespesaRepository _tipoDespesaRepository;
+        private readonly IMapper _mapper;
 
-        public TipoDespesaAppService(GerenciaDespesaContext ctx)
+        public TipoDespesaAppService(GerenciaDespesaContext ctx, IMapper mapper)
         {
             _tipoDespesaRepository = new TipoDespesaRepository(ctx);
+            _mapper = mapper;
+
         }
 
         public async Task<TipoDespesaViewModel> Adicionar(TipoDespesaViewModel tipoDespesaViewModel)
         {
-            var tipoDespesa = Mapper.Map<TipoDespesaViewModel, TipoDespesa>(tipoDespesaViewModel);
+            var tipoDespesa = _mapper.Map<TipoDespesaViewModel, TipoDespesa>(tipoDespesaViewModel);
 
             await _tipoDespesaRepository.Adicionar(tipoDespesa);
 
@@ -31,14 +34,17 @@ namespace GNBSys.GerenciaDespesas.Application
 
         public async Task<TipoDespesaViewModel> Atualizar(TipoDespesaViewModel tipoDespesaViewModel)
         {
-            await _tipoDespesaRepository.Atualizar(Mapper.Map<TipoDespesaViewModel, TipoDespesa>(tipoDespesaViewModel));
+            await _tipoDespesaRepository.Atualizar(_mapper.Map<TipoDespesaViewModel, TipoDespesa>(tipoDespesaViewModel));
             return tipoDespesaViewModel;
         }
 
 
-        public Task<TipoDespesaViewModel> Buscar(Expression<Func<TipoDespesaViewModel, bool>> predicate)
+        public List<TipoDespesaViewModel> Buscar(Expression<Func<TipoDespesaViewModel, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var _predicate = _mapper.Map<Expression<Func<TipoDespesaViewModel, bool>>, Expression<Func<TipoDespesa, bool>>>(predicate);
+            var result = _tipoDespesaRepository.Buscar(_predicate);
+
+            return _mapper.Map<List<TipoDespesa>, List<TipoDespesaViewModel>>(result);
         }
 
         public void Dispose()
@@ -49,12 +55,12 @@ namespace GNBSys.GerenciaDespesas.Application
 
         public async Task<TipoDespesaViewModel> ObterPorId(Guid? id)
         {
-            return Mapper.Map<TipoDespesa, TipoDespesaViewModel>(await _tipoDespesaRepository.ObterPorId(id));
+            return _mapper.Map<TipoDespesa,  TipoDespesaViewModel> (await _tipoDespesaRepository.ObterPorId(id));
         }
 
         public async Task<List<TipoDespesaViewModel>> ObterTodos()
         {
-            return Mapper.Map<List<TipoDespesa>, List<TipoDespesaViewModel>>(await _tipoDespesaRepository.ObterTodos());
+            return _mapper.Map<List<TipoDespesa>, List<TipoDespesaViewModel>>(await _tipoDespesaRepository.ObterTodos());
         }
 
         public async Task<List<TipoDespesa>> ObterTodosTeste()

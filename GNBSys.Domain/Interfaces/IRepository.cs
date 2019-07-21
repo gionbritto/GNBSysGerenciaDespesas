@@ -13,7 +13,7 @@ namespace GNBSys.GerenciaDespesas.Domain.Interfaces
         Task<List<TEntity>> ObterTodos();
         Task<TEntity> Atualizar(TEntity obj);
         Task RemoverAsync(Guid id);
-        IEnumerable<TEntity> Buscar(Expression<Func<TEntity, bool>> predicate);
+        List<TEntity> Buscar(Expression<Func<TEntity, bool>> predicate);
         Task<int> SaveChanges();
     }
 }

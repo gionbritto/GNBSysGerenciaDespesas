@@ -38,9 +38,9 @@ namespace GNBSys.GerenciaDespesas.Infra.Data.Repository
             return obj;
         }
 
-        public IEnumerable<TEntity> Buscar(Expression<Func<TEntity, bool>> predicate)
+        public List<TEntity> Buscar(Expression<Func<TEntity, bool>> predicate)
         {
-            return dbSet.Where(predicate);
+            return dbSet.Where(predicate).ToList();
         }
 
         public void Dispose()

@@ -11,7 +11,7 @@ namespace GNBSys.GerenciaDespesas.Application.Interfaces
     {
         Task<TipoDespesaViewModel> Adicionar(TipoDespesaViewModel tipoDespesaViewModel);
         Task<TipoDespesaViewModel> Atualizar(TipoDespesaViewModel tipoDespesaViewModel);
-        Task<TipoDespesaViewModel> Buscar(Expression<Func<TipoDespesaViewModel, bool>> predicate);
+        List<TipoDespesaViewModel> Buscar(Expression<Func<TipoDespesaViewModel, bool>> predicate);
         Task<TipoDespesaViewModel> ObterPorId(Guid? id);
         Task RemoverAsync(Guid id);
         Task<List<TipoDespesaViewModel>> ObterTodos();
