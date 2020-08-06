@@ -3,85 +3,128 @@
 @{
     ViewData["Title"] = "Index";
 }
-<div class="tabela">
-    <div class="container">
-        <h4>Tipo de Despesas Cadastradas</h4>
-        <hr />
-        <div class="row">
-            <div class="col-md-2">
-                <p class="btnNovo">
-                    <a class="btn btn-outline-primary btn-sm" asp-action="Create">Novo Tipo Despesa</a>
-                </p>
-            </div>
-            <div class="col-md-10 campoProcura text-right">
-                <form asp-action="Index" asp-controller="TipoDespesas" method="post">
-                    <div class="form-group">
-                        <div class="input-group col-md-6">
-                            <input class="form-control input-sm" name="txtProcurar" />
-                            <div class="info-group-append">
-                                <button type="submit" class="btn btn-outline-dark"><i class="fas fa-search-plus"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
 
-            </div>
+<!-- DataTables -->
+<link rel="stylesheet" href="../../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Tipo Despesa        
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Despesas</a></li>
+        <li><a href="#">Tipo Despesa</a></li>
+        <li class="active">Despesas Cadastradas</li>
+    </ol>
+</section>
+
+<section class="content">
+    @if (TempData["Confirmacao"] != null)
+    {
+
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-check"></i> Alerta!</h4>
+            @TempData["Confirmacao"]
         </div>
 
-        @if (TempData["Confirmacao"] != null)
-        {
-            <div class="alert alert-success">@TempData["Confirmacao"]</div>
-        }
+    }
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h3 class="box-title">Tipo de Despesas Cadastradas</h3>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="btnNovo">
+                                <a class="btn btn-block btn-primary btn-sm" asp-action="Create">Novo Tipo Despesa</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-        <table class="table table-hover table-sm">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Nome)
-                    </th>
-                    <th>Opções</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Nome)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.TipoDespesaId" class="btn btn-outline-info btn-sm">Atualizar</a> |
-                            <a onclick="ExibirModal('@item.TipoDespesaId', '@item.Nome')" class="btn btn-outline-danger btn-sm">Excluir</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="tblTipoDespesa" class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Nome)
+                                </th>
+                                <th>Opções</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Nome)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.TipoDespesaId" class="btn btn-info btn-sm">Atualizar</a> |
+                                        <a onclick="ExibirModal('@item.TipoDespesaId', '@item.Nome')" class="btn btn-danger btn-sm">Excluir</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Nome)
+                                </th>
+                                <th>Opções</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
     </div>
-</div>
+    <!-- /.row -->
+</section>
 
-<div class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div class="modal modal-danger fade" id="modal-danger">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Excluir</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h4 class="modal-title">Excluir</h4>
             </div>
             <div class="modal-body">
                 <p>Deseja prosseguir com a exclusão de <strong><text class="nome"></text></strong></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary btnExcluir">Sim</button>
-                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Não</button>
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Não</button>
+                <button type="button" class="btn btn-outline btnExcluir">Sim</button>
             </div>
         </div>
+        <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
 </div>
+<!-- /.modal -->
 @section Scripts{
 
     <script>
+
+        $('#tblTipoDespesa').DataTable({
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': true
+        })
+
         function ExibirModal(id, nome) {
             $('.nome')[0].innerHTML = nome;
             $('.modal').modal();

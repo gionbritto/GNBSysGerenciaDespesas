@@ -19,7 +19,7 @@ namespace GNBSys.GerenciaDespesas.Infra.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Despesa", b =>
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Despesa.Despesa", b =>
                 {
                     b.Property<Guid>("DespesaId")
                         .ValueGeneratedOnAdd();
@@ -39,6 +39,21 @@ namespace GNBSys.GerenciaDespesas.Infra.Data.Migrations
                     b.ToTable("TDespesa");
                 });
 
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Despesa.TipoDespesa", b =>
+                {
+                    b.Property<Guid>("TipoDespesaId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("TipoDespesaId");
+
+                    b.ToTable("TTipoDespesa");
+                });
+
             modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Mes", b =>
                 {
                     b.Property<int>("MesId")
@@ -52,6 +67,121 @@ namespace GNBSys.GerenciaDespesas.Infra.Data.Migrations
                     b.HasKey("MesId");
 
                     b.ToTable("TMes");
+                });
+
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Receita.Ativo", b =>
+                {
+                    b.Property<Guid>("AtivoId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<Guid>("TipoAtivoId");
+
+                    b.HasKey("AtivoId");
+
+                    b.HasIndex("TipoAtivoId");
+
+                    b.ToTable("TAtivo");
+                });
+
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Receita.AtivoCarteira", b =>
+                {
+                    b.Property<Guid>("AtivoId");
+
+                    b.Property<Guid>("CarteiraId");
+
+                    b.HasKey("AtivoId", "CarteiraId");
+
+                    b.HasIndex("CarteiraId");
+
+                    b.ToTable("TAtivoCarteira");
+                });
+
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Receita.Carteira", b =>
+                {
+                    b.Property<Guid>("CarteiraId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<double>("Valor");
+
+                    b.HasKey("CarteiraId");
+
+                    b.ToTable("TCarteira");
+                });
+
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Receita.MovimentacaoCarteira", b =>
+                {
+                    b.Property<Guid>("MovimentacaoCarteiraId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("AtivoId");
+
+                    b.Property<Guid>("CarteiraId");
+
+                    b.Property<DateTime>("DataCadastro");
+
+                    b.Property<DateTime>("DataMovimentacao");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<int>("MesId");
+
+                    b.Property<int>("TipoMovimentacaoCarteiraId");
+
+                    b.Property<double>("Valor");
+
+                    b.HasKey("MovimentacaoCarteiraId");
+
+                    b.HasIndex("AtivoId");
+
+                    b.HasIndex("CarteiraId");
+
+                    b.HasIndex("MesId");
+
+                    b.HasIndex("TipoMovimentacaoCarteiraId");
+
+                    b.ToTable("TMovimentacaoCarteira");
+                });
+
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Receita.TipoAtivo", b =>
+                {
+                    b.Property<Guid>("TipoAtivoId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("TipoAtivoId");
+
+                    b.ToTable("TTipoAtivo");
+                });
+
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Receita.TipoMovimentacaoCarteira", b =>
+                {
+                    b.Property<int>("TipoMovimentacaoCarteiraId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(100);
+
+                    b.HasKey("TipoMovimentacaoCarteiraId");
+
+                    b.ToTable("TTipoMovimentacaoCarteira");
                 });
 
             modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Salario", b =>
@@ -71,31 +201,60 @@ namespace GNBSys.GerenciaDespesas.Infra.Data.Migrations
                     b.ToTable("TSalario");
                 });
 
-            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.TipoDespesa", b =>
-                {
-                    b.Property<Guid>("TipoDespesaId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50);
-
-                    b.HasKey("TipoDespesaId");
-
-                    b.ToTable("TTipoDespesa");
-                });
-
-            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Despesa", b =>
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Despesa.Despesa", b =>
                 {
                     b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.Mes", "Mes")
                         .WithMany("Despesas")
                         .HasForeignKey("MesId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.TipoDespesa", "TipoDepesa")
+                    b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.Despesa.TipoDespesa", "TipoDespesa")
                         .WithMany("Despesas")
                         .HasForeignKey("TipoDespesaId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Receita.Ativo", b =>
+                {
+                    b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.Receita.TipoAtivo", "TipoAtivo")
+                        .WithMany("Ativos")
+                        .HasForeignKey("TipoAtivoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Receita.AtivoCarteira", b =>
+                {
+                    b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.Receita.Ativo", "Ativo")
+                        .WithMany("AtivosCarteira")
+                        .HasForeignKey("AtivoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.Receita.Carteira", "Carteira")
+                        .WithMany("AtivosCarteira")
+                        .HasForeignKey("CarteiraId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("GNBSys.GerenciaDespesas.Domain.Entities.Receita.MovimentacaoCarteira", b =>
+                {
+                    b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.Receita.Ativo", "Ativo")
+                        .WithMany("MovimentacoesCarteira")
+                        .HasForeignKey("AtivoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.Receita.Carteira", "Carteira")
+                        .WithMany("MovimentacoesCarteira")
+                        .HasForeignKey("CarteiraId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.Mes", "Mes")
+                        .WithMany("MovimentacoesCarteira")
+                        .HasForeignKey("MesId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GNBSys.GerenciaDespesas.Domain.Entities.Receita.TipoMovimentacaoCarteira", "TipoMovimentacaoCarteira")
+                        .WithMany("MovimentacoesCarteira")
+                        .HasForeignKey("TipoMovimentacaoCarteiraId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

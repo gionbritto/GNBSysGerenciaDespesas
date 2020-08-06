@@ -2,7 +2,7 @@
 using GNBSsys.GerenciaDespesas.Infra.Data.Context;
 using GNBSys.GerenciaDespesas.Application.Interfaces;
 using GNBSys.GerenciaDespesas.Application.ViewModels;
-using GNBSys.GerenciaDespesas.Domain.Entities;
+using GNBSys.GerenciaDespesas.Domain.Entities.Despesa;
 using GNBSys.GerenciaDespesas.Infra.Data.Repository;
 using System;
 using System.Collections.Generic;

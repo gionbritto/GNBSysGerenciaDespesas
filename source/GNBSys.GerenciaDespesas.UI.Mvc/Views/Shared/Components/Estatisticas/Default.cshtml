@@ -1,0 +1,21 @@
+﻿@model GNBSys.GerenciaDespesas.Application.ViewModels.EstatisticasDespesasViewModel
+@{
+
+}
+<div>
+    <h3>Estatíticas de Gastos</h3>
+    <hr class="leaf" />
+    @if (Model != null)
+    {
+        <p>Quantidade Despesas Cadastradas : @Model.QuantidadeDespesas</p>
+        <p> Menor Despesa : R$@Model.MenorDespesa</p>
+        <p> Maior Despesa : R$@Model.MaiorDespesa</p>
+    }
+    else
+    {
+        <p>Quantidade Despesas Cadastradas : 0</p>
+        <p> Menor Despesa : R$0</p>
+        <p> Maior Despesa : R$0</p>
+    }
+
+</div>

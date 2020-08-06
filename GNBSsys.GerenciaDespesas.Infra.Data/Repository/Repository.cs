@@ -56,7 +56,8 @@ namespace GNBSys.GerenciaDespesas.Infra.Data.Repository
 
         public Task<List<TEntity>> ObterTodos()
         {
-            return dbSet.ToListAsync();
+            var lista = dbSet.ToListAsync();
+            return lista;
         }
 
         public async Task RemoverAsync(Guid id)

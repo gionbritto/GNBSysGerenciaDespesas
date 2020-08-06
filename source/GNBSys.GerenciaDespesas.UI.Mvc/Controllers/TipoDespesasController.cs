@@ -15,13 +15,11 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
 {
     public class TipoDespesasController : Controller
     {
-        //private readonly GerenciaDespesaContext _context;
         private readonly TipoDespesaAppService _tipoDespesaAppService;
         private readonly IMapper _mapper;
 
         public TipoDespesasController(GerenciaDespesaContext context, IMapper mapper)
         {
-            //_context = context;
             _tipoDespesaAppService = new TipoDespesaAppService(context, mapper);
             _mapper = mapper;
         }
@@ -82,7 +80,7 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
             {
                 //tipoDespesaViewModel.TipoDespesaId = Guid.NewGuid();
                 var retorno = await _tipoDespesaAppService.Adicionar(tipoDespesaViewModel);
-                
+
                 if (retorno != null)
                 {
                     TempData["Confirmacao"] = retorno.Nome + " foi cadastrado(a) com sucesso!";
@@ -91,6 +89,28 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(tipoDespesaViewModel);
+        }
+
+        public async Task<JsonResult> AdicionarTipoDespesa(string txtDespesa)
+        {
+            if (!String.IsNullOrEmpty(txtDespesa))
+            {
+                //if (!_context.TTipoDespesa.Any(td => td.Nome.ToUpper() == txtDespesa.ToUpper()))
+                var listaTipodespesas = await _tipoDespesaAppService.ObterTodos();
+                if (!listaTipodespesas.Any(td => td.Nome.ToUpper() == txtDespesa.ToUpper()))
+                {
+                    var tipoDespesa = new TipoDespesaViewModel
+                    {
+                        Nome = txtDespesa
+                    };
+
+                    await _tipoDespesaAppService.Adicionar(tipoDespesa);
+
+                    return Json(true);
+                }
+
+            }
+            return Json(false);
         }
 
         // GET: TipoDespesas/Edit/5
@@ -127,7 +147,7 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
                 TipoDespesaViewModel retorno;
                 try
                 {
-                    retorno  = await _tipoDespesaAppService.Atualizar(tipoDespesaViewModel);
+                    retorno = await _tipoDespesaAppService.Atualizar(tipoDespesaViewModel);
                     //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -177,6 +197,7 @@ namespace GNBSys.GerenciaDespesas.UI.Mvc.Controllers
             //var tipoDespesa = await _tipoDespesaAppService.ObterPorId(id);
             await _tipoDespesaAppService.RemoverAsync(id);
             //await _context.SaveChangesAsync();
+            TempData["Confirmacao"] = "Tipo despesa excluído(a) com sucesso!";
             return Json("Tipo despesa excluída com sucesso!");
         }
 

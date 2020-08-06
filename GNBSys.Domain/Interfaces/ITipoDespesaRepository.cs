@@ -1,4 +1,4 @@
-﻿using GNBSys.GerenciaDespesas.Domain.Entities;
+﻿using GNBSys.GerenciaDespesas.Domain.Entities.Despesa;
 using System;
 using System.Collections.Generic;
 using System.Text;

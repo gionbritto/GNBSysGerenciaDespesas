@@ -1,5 +1,5 @@
 ﻿using GNBSsys.GerenciaDespesas.Infra.Data.Context;
-using GNBSys.GerenciaDespesas.Domain.Entities;
+using GNBSys.GerenciaDespesas.Domain.Entities.Despesa;
 using GNBSys.GerenciaDespesas.Domain.Interfaces;
 
 namespace GNBSys.GerenciaDespesas.Infra.Data.Repository

@@ -1,4 +1,4 @@
-﻿using GNBSys.GerenciaDespesas.Domain.Entities;
+﻿using GNBSys.GerenciaDespesas.Domain.Entities.Despesa;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -16,7 +16,7 @@ namespace GNBSys.GerenciaDespesas.Infra.Data.Mapping
             builder.Property(d => d.Valor).IsRequired();
 
             builder.HasOne(d => d.Mes).WithMany(m => m.Despesas).HasForeignKey(d => d.MesId);
-            builder.HasOne(d => d.TipoDepesa).WithMany(t => t.Despesas).HasForeignKey(d => d.TipoDespesaId);
+            builder.HasOne(d => d.TipoDespesa).WithMany(t => t.Despesas).HasForeignKey(d => d.TipoDespesaId);
         }
     }
 }

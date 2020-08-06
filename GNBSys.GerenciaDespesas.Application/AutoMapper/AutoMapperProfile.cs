@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using GNBSys.GerenciaDespesas.Application.ViewModels;
 using GNBSys.GerenciaDespesas.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using GNBSys.GerenciaDespesas.Domain.Entities.Despesa;
 
 namespace GNBSys.GerenciaDespesas.Application.AutoMapper
 {
@@ -12,9 +10,7 @@ namespace GNBSys.GerenciaDespesas.Application.AutoMapper
         public AutoMapperProfile()
         {
             CreateMap<TipoDespesa, TipoDespesaViewModel>().ReverseMap();
-            //CreateMap<TipoDespesaViewModel, TipoDespesa>();
-
-            //criar outros mapeamentos aqui
+            CreateMap<Salario, SalarioViewModel>().ReverseMap();
         }
     }
 }
